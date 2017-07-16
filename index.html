@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title></title>
+    </head>
+    <body>
+        <input type="text" placeholder="private key" name="privateKey" id="privateKey" value="">
+        <button type="button" name="button" id="buttonClick">Activar</button>
+
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js"></script>
+        <script type="text/javascript">
+            var button = $('#buttonClick');
+            var privateKey = $('#privateKey');
+
+            var order = {
+                "line_items": [{
+                    "name": "Tacos",
+                    "unit_price": 1000,
+                    "quantity": 12
+                }],
+                "shipping_lines": [{
+                    "amount": 1500,
+                    "carrier": "mi compañia"
+                }],
+                "currency": "MXN",
+                "customer_info": {
+                    "name": "Fulanito Pérez",
+                    "email": "fulanito@conekta.com",
+                    "phone": "+5218181818181"
+                },
+                "shipping_contact":{
+                    "phone": "5555555555",
+                    "receiver": "Bruce Wayne",
+                    "address": {
+                        "street1": "Calle 123 int 2 Col. Chida",
+                        "city": "Cuahutemoc",
+                        "state": "Ciudad de Mexico",
+                        "country": "MX",
+                        "postal_code": "06100",
+                        "residential": true
+                    }
+                },
+                "charges":[{
+                    "payment_method": {
+                        "type": "oxxo_cash"
+                    }
+                }]
+            };
+
+            button.on('click', function() {
+                $.ajax({
+                    url: 'https://api.conekta.io/orders',
+                    method: 'POST',
+                    headers: {
+                        'Authorization': 'Basic ' + btoa(privateKey.val()) + ':',
+                        'accept': 'application/vnd.conekta-v2.0.0+json',
+                        'content-type': 'application/json'
+                    },
+                    data: JSON.stringify(order),
+                    success: function(data) {
+                        console.log('data');
+                        alert('orden test hecha')
+                    },
+                    error: function(err, status) {
+                        console.log(status);
+                    }
+                })
+            })
+        </script>
+    </body>
+</html>
